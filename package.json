@@ -1,6 +1,6 @@
 {
   "name": "ember-targaryen",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Ember wrapper for targaryen pacakage",
   "keywords": [
     "ember-addon"
