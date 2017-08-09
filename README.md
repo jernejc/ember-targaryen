@@ -1,6 +1,6 @@
 # ember-targaryen
 
-This README outlines the details of collaborating on this Ember addon.
+A wrapper for targaryen package, a library to: "Test Firebase security rules without connecting to Firebase." https://github.com/goldibex/targaryen
 
 ## Installation
 
