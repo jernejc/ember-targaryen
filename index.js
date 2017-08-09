@@ -1,5 +1,5 @@
 var path = require('path');
-var mergeTrees = require('broccoli-merge-trees');
+var MergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
 
 module.exports = {
@@ -11,19 +11,38 @@ module.exports = {
       srcDir: '/',
       destDir: 'targaryen'
     });
-    
-    return mergeTrees([tree, packageTree]);
+
+    var trees = [tree, packageTree];
+
+    return new MergeTrees(trees, {
+      annotation: 'ember-targaryen: treeForVendor'
+    });
   },
 
-  included: function(app) {
-    this._super.included(app);
+  included: function (app) {
+    this._super.included.apply(this, arguments);
 
-    if (app.import) {
-      this.importDependencies(app);
+    var importContext;
+    if (this.import) {
+      // support for ember-cli >= 2.7
+      importContext = this;
+    } else {
+      // addon support for ember-cli < 2.7
+      importContext = this._findHostForLegacyEmberCLI();
     }
+
+    importContext.import('vendor/targaryen/index.js', { type: 'test' });
+    importContext.import('vendor/shims/targaryen.js', { type: 'test' });
   },
 
-  importDependencies: function(app) {
-    app.import('vendor/targaryen/index.js');
+  _findHostForLegacyEmberCLI: function() {
+    var current = this;
+    var app;
+
+    do {
+      app = current.app || app;
+    } while (current.parent.parent && (current = current.parent));
+
+    return app;
   }
 };
